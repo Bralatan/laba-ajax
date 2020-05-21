@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="jquery-3.3.1.min.js"></script>
+</head>
+<body>
+    <h1>Персонажі</h1>
+    ім'я: <input id="nameBox" type="text" size="20">
+    
+    <button id="readButton">Інформація про персонажа</button>
+    <button id="allUsersButton">Усі персонажі</button>
+    
+    <div id="info"></div>
+    <img id="photo"></img>
+
+    <hr/>
+
+    <div id="status"></div>
+
+    <script type="text/javascript">
+    
+        $(document).ready(() => {
+           console.log("hello browser") 
+   
+           $('#readButton').click(() => {
+               console.log('Read Button clicked')
+               const requestURL = 'users/' + $('#nameBox').val();
+               console.log("запит " + requestURL)
+               $.ajax({
+                   url: requestURL,
+                   type: 'GET',
+                   dataType: 'json',
+                   success: (data) => {
+                       console.log('You received some data', data)
+                       if (data.name && data.photo) {
+                           $('#status').html('знайдено ' + requestURL);
+                           $('#info').html('я ' + data.name);
+                           $('#photo').attr('src', data.photo).attr('width','300px')
+                       } else {
+                           $('#status').html('Відсутній ' + requestURL);
+                           $('#info').html('');
+                           $('#photo').attr('src', '').attr('width', '0px');
+                       }
+                   }
+               });
+           });
+   
+           $('#allUsersButton').click(() => {
+               console.log("clicked" + new Date());
+   
+               $.ajax({
+                   url: 'users/',
+                   type: 'GET',
+                   dataType: 'json',
+                   success: (data) => {
+                       console.log('ajax success', data);
+                       $('#status').html('Всі персонажі: ' + data)
+                   }
+               });
+           });
+        });
+
+        
+       </script>
+</body>
+</html>
